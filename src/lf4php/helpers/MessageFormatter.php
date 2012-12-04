@@ -23,6 +23,7 @@
 
 namespace lf4php\helpers;
 
+use Exception;
 use Mustache_Engine;
 
 /**
@@ -49,6 +50,9 @@ class MessageFormatter
 
     public static function format($message, $args = array())
     {
+        if ($message instanceof Exception) {
+            return $message->getTraceAsString();
+        }
         return self::getMustache()->render($message, $args);
     }
 }

@@ -23,6 +23,7 @@
 
 namespace lf4php\helpers;
 
+use Exception;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -34,5 +35,11 @@ class MessageFormatterTest extends PHPUnit_Framework_TestCase
     {
         $result = MessageFormatter::format("Hello {{user}}!", array('user' => 'John'));
         self::assertEquals('Hello John!', $result);
+    }
+
+    public function testException()
+    {
+        $result = MessageFormatter::format(new Exception('Test exception'));
+        self::assertTrue(strpos($result, __CLASS__) !== false);
     }
 }
