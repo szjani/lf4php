@@ -28,27 +28,63 @@ namespace lf4php;
  */
 interface Logger
 {
-    const ROOT_LOGGER_NAME = 'ROOT';
-
+    /**
+     * @return string
+     */
     public function getName();
 
+    /**
+     * @return boolean
+     */
     public function isDebugEnabled();
 
+    /**
+     * @return boolean
+     */
     public function isErrorEnabled();
 
+    /**
+     * @return boolean
+     */
     public function isInfoEnabled();
 
+    /**
+     * @return boolean
+     */
     public function isTraceEnabled();
 
+    /**
+     * @return boolean
+     */
     public function isWarnEnabled();
 
-    public function debug($format, array $params = array());
+    /**
+     * @param string $format
+     * @param mixed $params
+     */
+    public function debug($format, $params = array());
 
-    public function error($format, array $params = array());
+    /**
+     * @param string $format
+     * @param mixed $params
+     */
+    public function error($format, $params = array());
 
-    public function info($format, array $params = array());
+    /**
+     * @param string $format
+     * @param mixed $params
+     */
+    public function info($format, $params = array());
 
-    public function trace($format, array $params = array());
+    /**
+     * @param string $format
+     * @param mixed $params
+     */
+    public function trace($format, $params = array());
 
-    public function warn($format, array $params = array());
+    /**
+     * @param string $format
+     * @param mixed $params
+     */
+    public function warn($format, $params = array());
 }
