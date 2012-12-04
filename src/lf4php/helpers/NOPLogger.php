@@ -55,23 +55,23 @@ class NOPLogger implements Logger
         return self::NAME;
     }
 
-    public function debug($format, array $params = array())
+    public function debug($format, $params = array())
     {
     }
 
-    public function error($format, array $params = array())
+    public function error($format, $params = array())
     {
     }
 
-    public function info($format, array $params = array())
+    public function info($format, $params = array())
     {
     }
 
-    public function trace($format, array $params = array())
+    public function trace($format, $params = array())
     {
     }
 
-    public function warn($format, array $params = array())
+    public function warn($format, $params = array())
     {
     }
 
