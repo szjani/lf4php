@@ -8,9 +8,9 @@ Features
 
 There is one implementation shipped with this package, the NOPLoggerFactory. It doesn't do anything :) Messages can be formatted by Mustache.
 
-Currently there is one 'real' bridge implementation: [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
+Currently there is one 'real' binding implementation: [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
 
-Feel free to implement a bridge for your preferred loggin framework.
+Feel free to implement a binding for your preferred loggin framework.
 
 Using lf4php
 ------------
