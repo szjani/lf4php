@@ -1,5 +1,5 @@
 {
-    "name": "lf4php",
+    "name": "lf4php/lf4php",
     "description": "This is a facade for logging frameworks.",
     "license": "MIT",
     "keywords": ["log", "facade", "wrapper"],
