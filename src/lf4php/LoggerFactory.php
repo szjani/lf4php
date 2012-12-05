@@ -24,6 +24,8 @@
 namespace lf4php;
 
 use lf4php\ILoggerFactory;
+use ReflectionClass;
+use ReflectionException;
 use RuntimeException;
 
 /**
@@ -31,6 +33,10 @@ use RuntimeException;
  */
 class LoggerFactory
 {
+    public static $KNOWN_BINDINGS = array(
+        'lf4php\Monolog\MonologLoggerFactory'
+    );
+
     /**
      * @var ILoggerFactory
      */
@@ -38,6 +44,30 @@ class LoggerFactory
 
     private function __construct()
     {
+    }
+
+    /**
+     * Try to find a known binding.
+     *
+     * @throws RuntimeException More than one binding has been found
+     */
+    private static function findILoggerFactory()
+    {
+        $class = null;
+        foreach (self::$KNOWN_BINDINGS as $bindingClass) {
+            if (class_exists($bindingClass)) {
+                if ($class !== null) {
+                    throw new RuntimeException('More than one lf4php binding has been found. Set explicit one!');
+                }
+                $class = $bindingClass;
+            }
+        }
+        $reflectionClass = new ReflectionClass($class);
+        try {
+            return $reflectionClass->newInstanceArgs();
+        } catch (ReflectionException $e) {
+            return null;
+        }
     }
 
     /**
@@ -54,7 +84,10 @@ class LoggerFactory
     public static function getILoggerFactory()
     {
         if (self::$iLoggerFactory === null) {
-            throw new RuntimeException('Use setILoggerFactory() to initialize logger!');
+            self::$iLoggerFactory = self::findILoggerFactory();
+            if (self::$iLoggerFactory === null) {
+                throw new RuntimeException('Use setILoggerFactory() to initialize logger!');
+            }
         }
         return self::$iLoggerFactory;
     }
