@@ -7,3 +7,4 @@ nbproject/
 /build/phpdox
 vendor/*
 cache.properties
+composer.lock
