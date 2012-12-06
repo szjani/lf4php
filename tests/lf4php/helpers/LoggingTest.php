@@ -32,20 +32,6 @@ use RuntimeException;
  */
 class LoggingTest extends PHPUnit_Framework_TestCase
 {
-    public static function setUpBeforeClass()
-    {
-        try {
-            LoggerFactory::getLogger('any');
-            self::fail('Exception should have been throwed!');
-        } catch (RuntimeException $e) {
-        }
-    }
-
-    public function setUp()
-    {
-        LoggerFactory::setILoggerFactory(new NOPLoggerFactory());
-    }
-
     public function testLoggingNoException()
     {
         $testLogger1 = LoggerFactory::getLogger('test1');

@@ -62,6 +62,9 @@ class LoggerFactory
                 $class = $bindingClass;
             }
         }
+        if ($class === null) {
+            return null;
+        }
         $reflectionClass = new ReflectionClass($class);
         try {
             return $reflectionClass->newInstanceArgs();
@@ -86,7 +89,7 @@ class LoggerFactory
         if (self::$iLoggerFactory === null) {
             self::$iLoggerFactory = self::findILoggerFactory();
             if (self::$iLoggerFactory === null) {
-                throw new RuntimeException('Use setILoggerFactory() to initialize logger!');
+                self::$iLoggerFactory = new helpers\NOPLoggerFactory();
             }
         }
         return self::$iLoggerFactory;
