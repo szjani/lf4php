@@ -21,19 +21,23 @@
  * SOFTWARE.
  */
 
-namespace lf4php;
+namespace lf4php\nop;
 
-use PHPUnit_Framework_TestCase;
+use lf4php\ILoggerFactory;
+use lf4php\Logger;
 
 /**
+ * @SuppressWarnings("unused")
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class LoggerFactoryTest extends PHPUnit_Framework_TestCase
+class NOPLoggerFactory implements ILoggerFactory
 {
-    public function testFindKnownBindings()
+    /**
+     * @param string $name
+     * @return Logger
+     */
+    public function getLogger($name)
     {
-        LoggerFactory::$KNOWN_BINDINGS[] = 'lf4php\nop\NOPLoggerFactory';
-        $logger = LoggerFactory::getLogger('test');
-        self::assertInstanceOf('lf4php\nop\NOPLogger', $logger);
+        return NOPLogger::getNOPLogger();
     }
 }

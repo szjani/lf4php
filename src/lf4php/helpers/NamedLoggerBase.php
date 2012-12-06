@@ -30,7 +30,7 @@ use lf4php\Logger;
  */
 abstract class NamedLoggerBase implements Logger
 {
-    private $name;
+    protected $name;
 
     public function getName()
     {

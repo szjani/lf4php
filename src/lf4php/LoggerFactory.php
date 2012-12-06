@@ -89,7 +89,7 @@ class LoggerFactory
         if (self::$iLoggerFactory === null) {
             self::$iLoggerFactory = self::findILoggerFactory();
             if (self::$iLoggerFactory === null) {
-                self::$iLoggerFactory = new helpers\NOPLoggerFactory();
+                self::$iLoggerFactory = new nop\NOPLoggerFactory();
             }
         }
         return self::$iLoggerFactory;

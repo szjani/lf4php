@@ -24,6 +24,7 @@
 namespace lf4php\helpers;
 
 use lf4php\LoggerFactory;
+use lf4php\nop\NOPLogger;
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
 

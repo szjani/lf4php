@@ -21,19 +21,82 @@
  * SOFTWARE.
  */
 
-namespace lf4php;
+namespace lf4php\nop;
 
-use PHPUnit_Framework_TestCase;
+use lf4php\Logger;
 
 /**
+ * @SuppressWarnings("unused")
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class LoggerFactoryTest extends PHPUnit_Framework_TestCase
+class NOPLogger implements Logger
 {
-    public function testFindKnownBindings()
+    const NAME = 'NOP';
+
+    private static $instance = null;
+
+    /**
+     * @return NOPLogger
+     */
+    public static function getNOPLogger()
     {
-        LoggerFactory::$KNOWN_BINDINGS[] = 'lf4php\nop\NOPLoggerFactory';
-        $logger = LoggerFactory::getLogger('test');
-        self::assertInstanceOf('lf4php\nop\NOPLogger', $logger);
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    protected function __construct()
+    {
+    }
+
+    public function getName()
+    {
+        return self::NAME;
+    }
+
+    public function debug($format, $params = array())
+    {
+    }
+
+    public function error($format, $params = array())
+    {
+    }
+
+    public function info($format, $params = array())
+    {
+    }
+
+    public function trace($format, $params = array())
+    {
+    }
+
+    public function warn($format, $params = array())
+    {
+    }
+
+    public function isDebugEnabled()
+    {
+        return false;
+    }
+
+    public function isErrorEnabled()
+    {
+        return false;
+    }
+
+    public function isInfoEnabled()
+    {
+        return false;
+    }
+
+    public function isTraceEnabled()
+    {
+        return false;
+    }
+
+    public function isWarnEnabled()
+    {
+        return false;
     }
 }
