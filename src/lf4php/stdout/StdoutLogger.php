@@ -21,24 +21,27 @@
  * SOFTWARE.
  */
 
-namespace lf4php\helpers;
+namespace lf4php\stdout;
 
+use Exception;
+use lf4php\helpers\MessageFormatter;
 use lf4php\Logger;
+use lf4php\nop\NOPLogger;
 
 /**
  * @SuppressWarnings("unused")
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class NOPLogger implements Logger
+class StdoutLogger implements Logger
 {
-    const NAME = 'NOP';
+    const NAME = 'Stdout';
 
     private static $instance = null;
 
     /**
      * @return NOPLogger
      */
-    public static function getNOPLogger()
+    public static function getStdoutLogger()
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -57,46 +60,52 @@ class NOPLogger implements Logger
 
     public function debug($format, $params = array())
     {
+        echo MessageFormatter::format($format, $params) . PHP_EOL;
     }
 
     public function error($format, $params = array())
     {
+        echo MessageFormatter::format($format, $params) . PHP_EOL;
     }
 
     public function info($format, $params = array())
     {
+        echo MessageFormatter::format($format, $params) . PHP_EOL;
     }
 
     public function trace($format, $params = array())
     {
+        $e = new Exception();
+        echo MessageFormatter::format($format, $params) . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
     }
 
     public function warn($format, $params = array())
     {
+        echo MessageFormatter::format($format, $params) . PHP_EOL;
     }
 
     public function isDebugEnabled()
     {
-        return false;
+        return true;
     }
 
     public function isErrorEnabled()
     {
-        return false;
+        return true;
     }
 
     public function isInfoEnabled()
     {
-        return false;
+        return true;
     }
 
     public function isTraceEnabled()
     {
-        return false;
+        return true;
     }
 
     public function isWarnEnabled()
     {
-        return false;
+        return true;
     }
 }

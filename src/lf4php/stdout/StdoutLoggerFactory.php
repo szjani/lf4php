@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-namespace lf4php\helpers;
+namespace lf4php\stdout;
 
 use lf4php\ILoggerFactory;
 use lf4php\Logger;
@@ -30,7 +30,7 @@ use lf4php\Logger;
  * @SuppressWarnings("unused")
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class NOPLoggerFactory implements ILoggerFactory
+class StdoutLoggerFactory implements ILoggerFactory
 {
     /**
      * @param string $name
@@ -38,6 +38,6 @@ class NOPLoggerFactory implements ILoggerFactory
      */
     public function getLogger($name)
     {
-        return NOPLogger::getNOPLogger();
+        return StdoutLogger::getStdoutLogger();
     }
 }
