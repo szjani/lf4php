@@ -23,16 +23,17 @@
 
 namespace lf4php\stdout;
 
+use DateTime;
 use Exception;
 use lf4php\helpers\MessageFormatter;
-use lf4php\Logger;
+use lf4php\LocationLogger;
 use lf4php\nop\NOPLogger;
 
 /**
  * @SuppressWarnings("unused")
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class StdoutLogger implements Logger
+class StdoutLogger extends LocationLogger
 {
     const NAME = 'Stdout';
 
@@ -58,30 +59,41 @@ class StdoutLogger implements Logger
         return self::NAME;
     }
 
+    protected function getFormattedLocation()
+    {
+        return $this->getLocationPrefix() . $this->getShortLocation(self::DEFAULT_BACKTRACE_LEVEL + 1) . $this->getLocationSuffix();
+    }
+
+    protected function getDate($format = DateTime::ISO8601)
+    {
+        $now = new DateTime();
+        return $now->format($format);
+    }
+
     public function debug($format, $params = array())
     {
-        echo MessageFormatter::format($format, $params) . PHP_EOL;
+        echo MessageFormatter::format($this->getDate() . $this->getFormattedLocation() . $format, $params) . PHP_EOL;
     }
 
     public function error($format, $params = array())
     {
-        echo MessageFormatter::format($format, $params) . PHP_EOL;
+        echo MessageFormatter::format($this->getDate() . $this->getFormattedLocation() . $format, $params) . PHP_EOL;
     }
 
     public function info($format, $params = array())
     {
-        echo MessageFormatter::format($format, $params) . PHP_EOL;
+        echo MessageFormatter::format($this->getDate() . $this->getFormattedLocation() . $format, $params) . PHP_EOL;
     }
 
     public function trace($format, $params = array())
     {
         $e = new Exception();
-        echo MessageFormatter::format($format, $params) . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+        echo MessageFormatter::format($this->getDate() . $this->getFormattedLocation() . $format, $params) . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
     }
 
     public function warn($format, $params = array())
     {
-        echo MessageFormatter::format($format, $params) . PHP_EOL;
+        echo MessageFormatter::format($this->getDate() . $this->getFormattedLocation() . $format, $params) . PHP_EOL;
     }
 
     public function isDebugEnabled()
