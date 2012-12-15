@@ -17,6 +17,7 @@
         "psr-0": {"lf4php": "src/"}
     },
     "suggest": {
-        "lf4php/lf4php-monolog": "If you want to use Monolog"
+        "lf4php/lf4php-monolog": "If you want to use Monolog",
+        "lf4php/lf4php-stdout": "If you want to use Stdout"
     }
 }
