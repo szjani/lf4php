@@ -103,7 +103,7 @@
          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
   <exec executable="phpcs">
    <arg value="--extensions=php" />
-   <arg value="--standard=${builddir}/phpcs.xml" />
+   <arg value="--standard=PSR2" />
    <arg path="${srcdir}" />
   </exec>
  </target>
@@ -113,15 +113,13 @@
    <arg value="--extensions=php" />
    <arg value="--report=checkstyle" />
    <arg value="--report-file=${builddir}/logs/checkstyle.xml" />
-   <arg value="--standard=${builddir}/phpcs.xml" />
+   <arg value="--standard=PSR2" />
    <arg path="${srcdir}" />
   </exec>
  </target>
 
  <target name="phpcpd" description="Find duplicate code using PHPCPD">
   <exec executable="phpcpd">
-   <arg value="--suffixes" />
-   <arg value="php" />
    <arg value="--log-pmd" />
    <arg value="${builddir}/logs/pmd-cpd.xml" />
    <arg path="${srcdir}" />
