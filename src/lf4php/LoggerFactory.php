@@ -34,7 +34,8 @@ use RuntimeException;
 class LoggerFactory
 {
     public static $KNOWN_BINDINGS = array(
-        'lf4php\Monolog\MonologLoggerFactory'
+        'lf4php\monolog\MonologLoggerFactory',
+        'lf4php\stdout\StdoutLoggerFactory'
     );
 
     /**
