@@ -31,7 +31,7 @@ use lf4php\Logger;
  */
 abstract class CachedClassLoggerFactory implements ILoggerFactory
 {
-    private $map;
+    protected $map;
 
     public function __construct()
     {
