@@ -11,11 +11,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "mustache/mustache": "v2.0.2",
-        "lf4php/lf4php-impl": "1.0.*"
-    },
-    "provide": {
-        "lf4php/lf4php-impl": "1.0.*"
+        "mustache/mustache": "v2.0.2"
     },
     "autoload": {
         "psr-0": {"lf4php": "src/"}
