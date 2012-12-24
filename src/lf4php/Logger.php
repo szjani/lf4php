@@ -23,6 +23,8 @@
 
 namespace lf4php;
 
+use Exception;
+
 /**
  * @author Szurovecz János <szjani@szjani.hu>
  */
@@ -66,30 +68,35 @@ interface Logger
     /**
      * @param string $format
      * @param mixed $params
+     * @param Exception $e
      */
-    public function debug($format, $params = array());
+    public function debug($format, $params = array(), Exception $e = null);
 
     /**
      * @param string $format
      * @param mixed $params
+     * @param Exception $e
      */
-    public function error($format, $params = array());
+    public function error($format, $params = array(), Exception $e = null);
 
     /**
      * @param string $format
      * @param mixed $params
+     * @param Exception $e
      */
-    public function info($format, $params = array());
+    public function info($format, $params = array(), Exception $e = null);
 
     /**
      * @param string $format
      * @param mixed $params
+     * @param Exception $e
      */
-    public function trace($format, $params = array());
+    public function trace($format, $params = array(), Exception $e = null);
 
     /**
      * @param string $format
      * @param mixed $params
+     * @param Exception $e
      */
-    public function warn($format, $params = array());
+    public function warn($format, $params = array(), Exception $e = null);
 }

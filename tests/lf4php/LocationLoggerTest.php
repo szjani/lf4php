@@ -23,6 +23,7 @@
 
 namespace lf4php;
 
+use Exception;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -50,12 +51,12 @@ class LocationLoggerTest extends PHPUnit_Framework_TestCase
 
 class LocationLoggerMock extends LocationLogger
 {
-    public function debug($format, $params = array())
+    public function debug($format, $params = array(), Exception $e = null)
     {
         return $this->getLocation();
     }
 
-    public function error($format, $params = array())
+    public function error($format, $params = array(), Exception $e = null)
     {
 
     }
@@ -65,7 +66,7 @@ class LocationLoggerMock extends LocationLogger
 
     }
 
-    public function info($format, $params = array())
+    public function info($format, $params = array(), Exception $e = null)
     {
         return $this->getShortLocation();
     }
@@ -95,12 +96,12 @@ class LocationLoggerMock extends LocationLogger
 
     }
 
-    public function trace($format, $params = array())
+    public function trace($format, $params = array(), Exception $e = null)
     {
 
     }
 
-    public function warn($format, $params = array())
+    public function warn($format, $params = array(), Exception $e = null)
     {
 
     }
