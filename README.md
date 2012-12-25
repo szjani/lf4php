@@ -8,18 +8,20 @@ Features
 
 There is one implementation shipped with this package, the NOPLoggerFactory. It doesn't do anything :) Messages can be formatted by Mustache.
 
-Currently there is one 'real' binding implementation: [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
+Currently there are two 'real' binding implementations: [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog), [lf4php/lf4php-log4php](https://github.com/szjani/lf4php-log4php)
 
-Feel free to implement a binding for your preferred loggin framework.
+Feel free to implement a binding for your preferred logging framework.
 
 Using lf4php
 ------------
 
 ```php
 <?php
+// You have to set a factory depending on your chosen framework.
 LoggerFactory::setILoggerFactory(new NOPLoggerFactory());
 
-$logger = LoggerFactory::getLogger('test1');
+// Most implementations support logging hierarchy. You can use __CLASS__ keyword to obtain a logger.
+$logger = LoggerFactory::getLogger('\foo\bar');
 $logger->info('Message');
 $logger->debug('Hello {{name}}!', array('name' => 'John'));
 $logger->error(new \Exception());
