@@ -35,7 +35,8 @@ class LoggerFactory
 {
     public static $KNOWN_BINDINGS = array(
         'lf4php\monolog\MonologLoggerFactory',
-        'lf4php\stdout\StdoutLoggerFactory'
+        'lf4php\stdout\StdoutLoggerFactory',
+        'lf4php\log4php\Log4phpLoggerFactory'
     );
 
     /**
