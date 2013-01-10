@@ -66,4 +66,4 @@ History
 ### 3.0
 
 Mustache based MessageFormatter has been modified to use slf4j style. For more information see the description above.
-Thus Mustache is not a dependency anymore.
+Thus Mustache is not a dependency anymore. Now message formatting is more than 4 times faster and log lines are shorter.
