@@ -33,13 +33,19 @@ class MessageFormatterTest extends PHPUnit_Framework_TestCase
 {
     public function testFormat()
     {
-        $result = MessageFormatter::format("Hello {{user}}!", array('user' => 'John'));
-        self::assertEquals('Hello John!', $result);
+        $result = MessageFormatter::format("Hello {}, are you {}?", array('John', 'ok'));
+        self::assertEquals('Hello John, are you ok?', $result);
     }
 
     public function testException()
     {
         $result = MessageFormatter::format(new Exception('Test exception'));
         self::assertTrue(strpos($result, __CLASS__) !== false);
+    }
+
+    public function testNested()
+    {
+        $result = MessageFormatter::format("Set {1,2} differs from {{}}", array(3));
+        self::assertEquals('Set {1,2} differs from {3}', $result);
     }
 }

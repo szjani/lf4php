@@ -23,33 +23,23 @@
 
 namespace lf4php\helpers;
 
-use Exception;
-use Mustache_Engine;
-
 /**
  * @author Szurovecz János <szjani@szjani.hu>
  */
 class MessageFormatter
 {
-    private static $mustache;
-
     private function __construct()
     {
     }
 
-    /**
-     * @return \Mustache_Engine
-     */
-    private static function getMustache()
-    {
-        if (self::$mustache === null) {
-            self::$mustache = new Mustache_Engine();
-        }
-        return self::$mustache;
-    }
-
     public static function format($message, $args = array())
     {
-        return self::getMustache()->render((string) $message, $args);
+        return preg_replace_callback(
+            '#{}#',
+            function () use (&$args) {
+                return (string) array_shift($args);
+            },
+            $message
+        );
     }
 }
