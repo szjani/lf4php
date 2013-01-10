@@ -6,7 +6,7 @@ This is a logging facade library. It wraps and hides logging frameworks thus you
 Features
 --------
 
-There is one implementation shipped with this package, the NOPLoggerFactory. It doesn't do anything. Messages can be formatted by Mustache.
+There is one implementation shipped with this package, the NOPLoggerFactory. It doesn't do anything.
 
 Feel free to implement a binding for your preferred logging framework.
 
@@ -35,6 +35,16 @@ based on the exploded name.
 
   It is highly recommended to use \__CLASS\__ keyword anytime you want to obtain a logger object.
 
+### Message formatting
+
+You can use parametrized messages. The '{}' pairs will be replaced with the corresponding item in the passed array.
+The following two lines will yield the exact same output:
+
+```php
+$logger->debug('Hello ' . $name . ', welcome to ' . $where . '!');
+$logger->debug('Hello {}, welcome to {}!', array($name, $where));
+```
+
 Using lf4php
 ------------
 
@@ -46,6 +56,14 @@ LoggerFactory::setILoggerFactory($factoryImplementation);
 // Most implementations support logging hierarchy. You can use __CLASS__ keyword to obtain a logger.
 $logger = LoggerFactory::getLogger('\foo\bar');
 $logger->info('Message');
-$logger->debug('Hello {{name}}!', array('name' => 'John'));
+$logger->debug('Hello {}, are you {}?', array('John', 'ok'));
 $logger->error(new \Exception());
 ```
+
+History
+-------
+
+### 3.0
+
+Mustache based MessageFormatter has been modified to use slf4j style. For more information see the description above.
+Thus Mustache is not a dependency anymore.
