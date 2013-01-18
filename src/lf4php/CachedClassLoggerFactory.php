@@ -39,6 +39,8 @@ abstract class CachedClassLoggerFactory implements ILoggerFactory
     }
 
     /**
+     * Must returns with the same object every time!
+     *
      * @return Logger
      */
     abstract protected function getDefaultLogger();
@@ -49,7 +51,7 @@ abstract class CachedClassLoggerFactory implements ILoggerFactory
      * logger for \foo then it will returns it in case
      * of no registered logger for \foo\bar.
      *
-     * If it does not find any logger, creates a default one.
+     * If it does not find any logger, retrieves the default one.
      *
      * @param string $name
      * @return Logger
@@ -62,10 +64,9 @@ abstract class CachedClassLoggerFactory implements ILoggerFactory
             array_pop($parts);
             $name = implode('\\', $parts);
         }
-        if (!array_key_exists($name, $this->map)) {
-            $this->map[$name] = $this->getDefaultLogger();
-        }
-        return $this->map[$name];
+        return array_key_exists($name, $this->map)
+            ? $this->map[$name]
+            : $this->getDefaultLogger();
     }
 
     /**
@@ -83,6 +84,9 @@ abstract class CachedClassLoggerFactory implements ILoggerFactory
      */
     public function getLogger($name)
     {
-        return $this->findClosestAncestor($name);
+        if (!array_key_exists($name, $this->map)) {
+            $this->map[$name] = $this->findClosestAncestor($name);
+        }
+        return $this->map[$name];
     }
 }

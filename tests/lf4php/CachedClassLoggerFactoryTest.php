@@ -68,4 +68,17 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
             ->method('getDefaultLogger');
         self::assertSame($logger, $this->factory->getLogger(__CLASS__));
     }
+
+    public function testGetFirstParentLogger()
+    {
+        $logger1 = $this->getMock(__NAMESPACE__ . '\Logger');
+        $logger2 = $this->getMock(__NAMESPACE__ . '\Logger');
+        $this->factory->registerLogger('foo', $logger1);
+        $this->factory->registerLogger('foo\bar', $logger2);
+        $this->factory
+            ->expects(self::never())
+            ->method('getDefaultLogger');
+        self::assertSame($logger2, $this->factory->getLogger('foo\bar\test'));
+        self::assertSame($logger1, $this->factory->getLogger('foo\another'));
+    }
 }
