@@ -2,9 +2,9 @@ language: php
 
 env:
   - OPCODE_CACHE=apc
+
+php:
+  - 5.3
+  - 5.4
   
-  php:
-    - 5.3
-    - 5.4
-        
-  script: phpunit
+script: phpunit
