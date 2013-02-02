@@ -1,6 +1,8 @@
 lf4php
 ======
 
+Travis Status: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=3.0)](https://travis-ci.org/szjani/lf4php)
+
 This is a logging facade library. It wraps and hides logging frameworks thus you can whenever switch to another one. The idea came from slf4j which is a Java solution.
 
 Features
