@@ -3,6 +3,7 @@ lf4php
 
 master: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=master)](https://travis-ci.org/szjani/lf4php)
 3.0: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=3.0)](https://travis-ci.org/szjani/lf4php)
+4.0: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=4.0)](https://travis-ci.org/szjani/lf4php)
 
 This is a logging facade library. It wraps and hides logging frameworks thus you can whenever switch to another one. The idea came from slf4j which is a Java solution.
 
@@ -68,7 +69,7 @@ History
 
 ### 4.0
 
-LazyMap (thanks Ocramius) has been introduced to store logger instances in CachedClassLoggerFactory. Its interface has been changed:
+LazyMap (thanks Ocramius) has been introduced to store logger instances in `CachedClassLoggerFactory`. Its interface has been changed:
  - the root logger has to be passed to its constructor, the abstract `getDefaultLogger()` method has been removed
  - the `map` property became private
  - after calling the `getLogger()` method for the first time, no more logger can be registered, otherwise an `InvalidArgumentException` is being thrown
