@@ -33,11 +33,6 @@ interface Logger
     /**
      * @return string
      */
-    const ROOT_LOGGER_NAME = 'ROOT';
-
-    /**
-     * @return string
-     */
     public function getName();
 
     /**
