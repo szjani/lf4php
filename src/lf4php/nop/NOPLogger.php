@@ -24,13 +24,14 @@
 namespace lf4php\nop;
 
 use Exception;
+use lf4php\helpers\NamedLoggerBase;
 use lf4php\Logger;
 
 /**
  * @SuppressWarnings("unused")
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class NOPLogger implements Logger
+class NOPLogger extends NamedLoggerBase
 {
     const NAME = 'NOP';
 
@@ -49,11 +50,7 @@ class NOPLogger implements Logger
 
     protected function __construct()
     {
-    }
-
-    public function getName()
-    {
-        return self::NAME;
+        $this->name = self::NAME;
     }
 
     public function debug($format, $params = array(), Exception $e = null)

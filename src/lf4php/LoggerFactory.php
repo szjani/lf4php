@@ -36,7 +36,8 @@ class LoggerFactory
     public static $KNOWN_BINDINGS = array(
         'lf4php\monolog\MonologLoggerFactory',
         'lf4php\stdout\StdoutLoggerFactory',
-        'lf4php\log4php\Log4phpLoggerFactory'
+        'lf4php\log4php\Log4phpLoggerFactory',
+        'lf4php\psr3\Psr3LoggerFactory'
     );
 
     /**
@@ -78,7 +79,7 @@ class LoggerFactory
     /**
      * @param ILoggerFactory $iLoggerFactory
      */
-    public static function setILoggerFactory(ILoggerFactory $iLoggerFactory)
+    public static function setILoggerFactory(ILoggerFactory $iLoggerFactory = null)
     {
         self::$iLoggerFactory = $iLoggerFactory;
     }

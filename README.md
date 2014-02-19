@@ -66,6 +66,13 @@ $logger->error(new \Exception());
 History
 -------
 
+### 4.0
+
+LazyMap (thanks Ocramius) has been introduced to store logger instances in CachedClassLoggerFactory. Its interface has been changed:
+ - the root logger has to be passed to its constructor, the abstract `getDefaultLogger()` method has been removed
+ - the `map` property became private
+ - after calling the `getLogger()` method for the first time, no more logger can be registered, otherwise an `InvalidArgumentException` is being thrown
+
 ### 3.0
 
 Mustache based MessageFormatter has been modified to use slf4j style. For more information see the description above.

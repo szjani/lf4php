@@ -32,12 +32,19 @@ use lf4php\Logger;
  */
 class NOPLoggerFactory implements ILoggerFactory
 {
+    private $logger;
+
+    public function __construct()
+    {
+        $this->logger = NOPLogger::getNOPLogger();
+    }
+
     /**
      * @param string $name
      * @return Logger
      */
     public function getLogger($name)
     {
-        return NOPLogger::getNOPLogger();
+        return $this->logger;
     }
 }

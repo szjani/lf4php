@@ -39,16 +39,12 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = $this->getMock(__NAMESPACE__ . '\CachedClassLoggerFactory', array('getDefaultLogger'));
         $this->defaultLogger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $this->factory = new CachedClassLoggerFactory($this->defaultLogger);
     }
 
     public function testGetNotRegisteredLogger()
     {
-        $this->factory
-            ->expects(self::once())
-            ->method('getDefaultLogger')
-            ->will(self::returnValue($this->defaultLogger));
         self::assertSame($this->defaultLogger, $this->factory->getLogger('notExists'));
     }
 
@@ -63,9 +59,6 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
     {
         $logger = $this->getMock(__NAMESPACE__ . '\Logger');
         $this->factory->registerLogger(__NAMESPACE__, $logger);
-        $this->factory
-            ->expects(self::never())
-            ->method('getDefaultLogger');
         self::assertSame($logger, $this->factory->getLogger(__CLASS__));
     }
 
@@ -75,10 +68,18 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
         $logger2 = $this->getMock(__NAMESPACE__ . '\Logger');
         $this->factory->registerLogger('foo', $logger1);
         $this->factory->registerLogger('foo\bar', $logger2);
-        $this->factory
-            ->expects(self::never())
-            ->method('getDefaultLogger');
         self::assertSame($logger2, $this->factory->getLogger('foo\bar\test'));
         self::assertSame($logger1, $this->factory->getLogger('foo\another'));
+        self::assertSame($logger1, $this->factory->getLogger('foo\another\something'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testLaterRegisteredLogger()
+    {
+        $fooLogger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $this->factory->getLogger('foo\bar');
+        $this->factory->registerLogger('foo', $fooLogger);
     }
 }

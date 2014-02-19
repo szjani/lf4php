@@ -24,58 +24,40 @@
 namespace lf4php;
 
 use ArrayObject;
+use InvalidArgumentException;
+use LazyMap\CallbackLazyMap;
 use lf4php\Logger;
 
 /**
  * @author Szurovecz János <szjani@szjani.hu>
  */
-abstract class CachedClassLoggerFactory implements ILoggerFactory
+class CachedClassLoggerFactory implements ILoggerFactory
 {
-    protected $map;
-
-    public function __construct()
-    {
-        $this->map = new ArrayObject();
-    }
+    private $map;
+    private $alreadyUsed = false;
 
     /**
-     * Must returns with the same object every time!
-     *
-     * @return Logger
+     * @param Logger $rootLogger
      */
-    abstract protected function getDefaultLogger();
-
-    /**
-     * Useful for class names.
-     * If $name is \foo\bar and there is a registered
-     * logger for \foo then it will returns it in case
-     * of no registered logger for \foo\bar.
-     *
-     * If it does not find any logger, retrieves the default one.
-     *
-     * @param string $name
-     * @return Logger
-     */
-    protected function findClosestAncestor($name)
+    public function __construct(Logger $rootLogger)
     {
-        $name = trim($name, '\\');
-        $parts = explode('\\', $name);
-        while (!array_key_exists($name, $this->map) && !empty($parts)) {
-            array_pop($parts);
-            $name = implode('\\', $parts);
-        }
-        return array_key_exists($name, $this->map)
-            ? $this->map[$name]
-            : $this->getDefaultLogger();
+        $this->map = new LoggerMap($rootLogger);
     }
 
     /**
      * @param string $classOrNamespace
      * @param Logger $logger
+     * @throws InvalidArgumentException
      */
     public function registerLogger($classOrNamespace, Logger $logger)
     {
-        $this->map[(string) $classOrNamespace] = $logger;
+        if ($this->alreadyUsed) {
+            throw new InvalidArgumentException(
+                "Cannot register any Logger instances after the first call of getLogger() method"
+            );
+        }
+        $key = (string) $classOrNamespace;
+        $this->map->$key = $logger;
     }
 
     /**
@@ -84,9 +66,8 @@ abstract class CachedClassLoggerFactory implements ILoggerFactory
      */
     public function getLogger($name)
     {
-        if (!array_key_exists($name, $this->map)) {
-            $this->map[$name] = $this->findClosestAncestor($name);
-        }
-        return $this->map[$name];
+        $this->alreadyUsed = true;
+        $key = (string) $name;
+        return $this->map->$key;
     }
 }

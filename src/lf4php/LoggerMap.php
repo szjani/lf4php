@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2012 Szurovecz János
+ * Copyright (c) 2014 Szurovecz János
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,31 +23,37 @@
 
 namespace lf4php;
 
-use PHPUnit_Framework_TestCase;
+use LazyMap\AbstractLazyMap;
 
-/**
- * @author Szurovecz János <szjani@szjani.hu>
- */
-class LoggerFactoryTest extends PHPUnit_Framework_TestCase
+class LoggerMap extends AbstractLazyMap
 {
-    public function testFindKnownBindingsMissing()
+    /**
+     * @var Logger
+     */
+    private $defaultLogger;
+
+    public function __construct(Logger $defaultLogger)
     {
-        $factory = LoggerFactory::getILoggerFactory();
-        self::assertInstanceOf('\lf4php\nop\NOPLoggerFactory', $factory);
+        $this->defaultLogger = $defaultLogger;
     }
 
-    public function testFindKnownBindings()
+    /**
+     * Instantiate a particular key by the given name
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    protected function instantiate($name)
     {
-        LoggerFactory::$KNOWN_BINDINGS[] = 'lf4php\nop\NOPLoggerFactory';
-        $logger = LoggerFactory::getLogger('test');
-        self::assertInstanceOf('lf4php\nop\NOPLogger', $logger);
-    }
-
-    public function testSetILoggerFactory()
-    {
-        $factory = $this->getMock('\lf4php\ILoggerFactory');
-        LoggerFactory::setILoggerFactory($factory);
-        self::assertSame($factory, LoggerFactory::getILoggerFactory());
-        LoggerFactory::setILoggerFactory(null);
+        $name = trim($name, '\\');
+        $parts = explode('\\', $name);
+        array_pop($parts);
+        if (empty($parts)) {
+            return $this->defaultLogger;
+        } else {
+            $parentName = implode('\\', $parts);
+            return $this->$parentName;
+        }
     }
 }
