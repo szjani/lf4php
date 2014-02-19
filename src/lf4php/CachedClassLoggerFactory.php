@@ -23,10 +23,7 @@
 
 namespace lf4php;
 
-use ArrayObject;
-use InvalidArgumentException;
-use LazyMap\CallbackLazyMap;
-use lf4php\Logger;
+use RuntimeException;
 
 /**
  * @author Szurovecz János <szjani@szjani.hu>
@@ -67,7 +64,6 @@ class CachedClassLoggerFactory implements ILoggerFactory
     /**
      * @param string $classOrNamespace
      * @param Logger $logger
-     * @throws InvalidArgumentException
      */
     public function registerLogger($classOrNamespace, Logger $logger)
     {
@@ -90,7 +86,7 @@ class CachedClassLoggerFactory implements ILoggerFactory
     protected function checkNotUsed()
     {
         if ($this->alreadyUsed) {
-            throw new InvalidArgumentException(
+            throw new RuntimeException(
                 "Cannot register any Logger instances after the first call of getLogger() method"
             );
         }

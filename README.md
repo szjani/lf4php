@@ -21,6 +21,7 @@ is known by lf4php. Currently known implementations:
 
 * [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
 * [lf4php/lf4php-log4php](https://github.com/szjani/lf4php-log4php)
+* [lf4php/lf4php-psr3](https://github.com/szjani/lf4php-psr3)
 * [lf4php/lf4php-stdout] (https://github.com/szjani/lf4php-stdout) (You should use another implementation instead)
 
 ### NOPLoggerFactory
@@ -72,7 +73,7 @@ History
 LazyMap (thanks Ocramius) has been introduced to store logger instances in `CachedClassLoggerFactory`. Its interface has been changed:
  - the root logger has to be passed to its constructor, the abstract `getDefaultLogger()` method has been removed
  - the `map` property became private
- - after calling the `getLogger()` method for the first time, no more logger can be registered, otherwise an `InvalidArgumentException` is being thrown
+ - after calling the `getLogger()` method for the first time, no more logger can be registered, otherwise an `RuntimeException` is being thrown
 
 ### 3.0
 
