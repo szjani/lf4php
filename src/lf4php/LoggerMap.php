@@ -30,11 +30,27 @@ class LoggerMap extends AbstractLazyMap
     /**
      * @var Logger
      */
-    private $defaultLogger;
+    private $rootLogger;
 
-    public function __construct(Logger $defaultLogger)
+    public function __construct(Logger $rootLogger)
     {
-        $this->defaultLogger = $defaultLogger;
+        $this->rootLogger = $rootLogger;
+    }
+
+    /**
+     * @return Logger
+     */
+    public function getRootLogger()
+    {
+        return $this->rootLogger;
+    }
+
+    /**
+     * @param Logger $rootLogger
+     */
+    public function setRootLogger(Logger $rootLogger)
+    {
+        $this->rootLogger = $rootLogger;
     }
 
     /**
@@ -50,7 +66,7 @@ class LoggerMap extends AbstractLazyMap
         $parts = explode('\\', $name);
         array_pop($parts);
         if (empty($parts)) {
-            return $this->defaultLogger;
+            return $this->rootLogger;
         } else {
             $parentName = implode('\\', $parts);
             return $this->$parentName;

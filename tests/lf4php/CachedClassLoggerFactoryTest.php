@@ -82,4 +82,12 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
         $this->factory->getLogger('foo\bar');
         $this->factory->registerLogger('foo', $fooLogger);
     }
+
+    public function testRootLogger()
+    {
+        $logger = $this->getMock(__NAMESPACE__ . '\Logger');
+        self::assertNotSame($logger, $this->factory->getRootLogger());
+        $this->factory->setRootLogger($logger);
+        self::assertSame($logger, $this->factory->getRootLogger());
+    }
 }

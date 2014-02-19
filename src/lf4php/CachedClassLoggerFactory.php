@@ -33,6 +33,9 @@ use lf4php\Logger;
  */
 class CachedClassLoggerFactory implements ILoggerFactory
 {
+    /**
+     * @var LoggerMap
+     */
     private $map;
     private $alreadyUsed = false;
 
@@ -45,17 +48,30 @@ class CachedClassLoggerFactory implements ILoggerFactory
     }
 
     /**
+     * @param Logger $logger
+     */
+    final public function setRootLogger(Logger $logger)
+    {
+        $this->checkNotUsed();
+        $this->map->setRootLogger($logger);
+    }
+
+    /**
+     * @return Logger
+     */
+    final public function getRootLogger()
+    {
+        return $this->map->getRootLogger();
+    }
+
+    /**
      * @param string $classOrNamespace
      * @param Logger $logger
      * @throws InvalidArgumentException
      */
     public function registerLogger($classOrNamespace, Logger $logger)
     {
-        if ($this->alreadyUsed) {
-            throw new InvalidArgumentException(
-                "Cannot register any Logger instances after the first call of getLogger() method"
-            );
-        }
+        $this->checkNotUsed();
         $key = (string) $classOrNamespace;
         $this->map->$key = $logger;
     }
@@ -69,5 +85,14 @@ class CachedClassLoggerFactory implements ILoggerFactory
         $this->alreadyUsed = true;
         $key = (string) $name;
         return $this->map->$key;
+    }
+
+    protected function checkNotUsed()
+    {
+        if ($this->alreadyUsed) {
+            throw new InvalidArgumentException(
+                "Cannot register any Logger instances after the first call of getLogger() method"
+            );
+        }
     }
 }
