@@ -25,6 +25,7 @@ namespace lf4php\helpers;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
+use precore\util\error\ErrorHandler;
 
 /**
  * @author Szurovecz János <szjani@szjani.hu>
@@ -47,5 +48,14 @@ class MessageFormatterTest extends PHPUnit_Framework_TestCase
     {
         $result = MessageFormatter::format("Set {1,2} differs from {{}}", array(3));
         self::assertEquals('Set {1,2} differs from {3}', $result);
+    }
+
+    public function testStringCastError()
+    {
+        ErrorHandler::register();
+        $obj = new \stdClass();
+        $output = MessageFormatter::format('Object id: {}', array($obj));
+        self::assertStringEndsWith(spl_object_hash($obj), $output);
+        restore_error_handler();
     }
 }

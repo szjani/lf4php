@@ -23,6 +23,8 @@
 
 namespace lf4php\helpers;
 
+use precore\util\error\RecoverableErrorException;
+
 /**
  * @author Szurovecz János <szjani@szjani.hu>
  */
@@ -37,7 +39,12 @@ class MessageFormatter
         return preg_replace_callback(
             '#{}#',
             function () use (&$args) {
-                return (string) array_shift($args);
+                $arg = array_shift($args);
+                try {
+                    return (string) $arg;
+                } catch (RecoverableErrorException $e) {
+                    return spl_object_hash($arg);
+                }
             },
             $message
         );
