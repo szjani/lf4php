@@ -25,7 +25,6 @@ namespace lf4php\nop;
 
 use Exception;
 use lf4php\helpers\NamedLoggerBase;
-use lf4php\Logger;
 
 /**
  * @SuppressWarnings("unused")
