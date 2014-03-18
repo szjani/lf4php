@@ -23,7 +23,7 @@
 
 namespace lf4php\helpers;
 
-use precore\util\error\RecoverableErrorException;
+use Exception;
 
 /**
  * @author Szurovecz János <szjani@szjani.hu>
@@ -42,7 +42,7 @@ class MessageFormatter
                 $arg = array_shift($args);
                 try {
                     return (string) $arg;
-                } catch (RecoverableErrorException $e) {
+                } catch (Exception $e) {
                     return spl_object_hash($arg);
                 }
             },
