@@ -52,7 +52,14 @@ class MessageFormatterTest extends PHPUnit_Framework_TestCase
 
     public function testStringCastError()
     {
-        ErrorHandler::register();
+        set_error_handler(
+            function () {
+                if (error_reporting() == 0) {
+                    return false;
+                }
+                throw new Exception();
+            }
+        );
         $obj = new \stdClass();
         $output = MessageFormatter::format('Object id: {}', array($obj));
         self::assertStringEndsWith(spl_object_hash($obj), $output);
