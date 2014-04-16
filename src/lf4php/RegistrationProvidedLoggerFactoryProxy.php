@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014 Szurovecz János
+ * Copyright (c) 2012-2014 Szurovecz János
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,18 +23,21 @@
 
 namespace lf4php;
 
-use LazyMap\AbstractLazyMap;
-
-class LoggerMap extends AbstractLazyMap implements RegistrationProvidedLoggerFactory
+/**
+ * @package lf4php
+ *
+ * @author Szurovecz János <szjani@szjani.hu>
+ */
+class RegistrationProvidedLoggerFactoryProxy implements RegistrationProvidedLoggerFactory
 {
     /**
-     * @var Logger
+     * @var RegistrationProvidedLoggerFactory
      */
-    private $rootLogger;
+    protected $factory;
 
-    public function __construct(Logger $rootLogger)
+    public function __construct(RegistrationProvidedLoggerFactory $factory)
     {
-        $this->rootLogger = $rootLogger;
+        $this->factory = $factory;
     }
 
     /**
@@ -42,25 +45,15 @@ class LoggerMap extends AbstractLazyMap implements RegistrationProvidedLoggerFac
      */
     public function getRootLogger()
     {
-        return $this->rootLogger;
+        return $this->factory->getRootLogger();
     }
 
     /**
-     * @param Logger $rootLogger
+     * @param Logger $logger
      */
-    public function setRootLogger(Logger $rootLogger)
+    public function setRootLogger(Logger $logger)
     {
-        $this->rootLogger = $rootLogger;
-    }
-
-    /**
-     * @param string $name
-     * @return Logger
-     */
-    public function getLogger($name)
-    {
-        $key = (string) $name;
-        return $this->$key;
+        $this->factory->setRootLogger($logger);
     }
 
     /**
@@ -69,27 +62,15 @@ class LoggerMap extends AbstractLazyMap implements RegistrationProvidedLoggerFac
      */
     public function registerLogger($classOrNamespace, Logger $logger)
     {
-        $key = (string) $classOrNamespace;
-        $this->$key = $logger;
+        $this->factory->registerLogger($classOrNamespace, $logger);
     }
 
     /**
-     * Instantiate a particular key by the given name
-     *
      * @param string $name
-     *
-     * @return mixed
+     * @return Logger
      */
-    protected function instantiate($name)
+    public function getLogger($name)
     {
-        $name = trim($name, '\\');
-        $parts = explode('\\', $name);
-        array_pop($parts);
-        if (empty($parts)) {
-            return $this->rootLogger;
-        } else {
-            $parentName = implode('\\', $parts);
-            return $this->$parentName;
-        }
+        return $this->factory->getLogger($name);
     }
 }

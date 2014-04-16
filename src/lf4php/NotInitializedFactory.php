@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2012 Szurovecz János
+ * Copyright (c) 2012-2014 Szurovecz János
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -24,15 +24,32 @@
 namespace lf4php;
 
 /**
+ * @package lf4php
+ *
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class CachedClassLoggerFactory extends RegistrationProvidedLoggerFactoryProxy
+final class NotInitializedFactory extends RegistrationProvidedLoggerFactoryProxy
 {
     /**
-     * @param Logger $rootLogger
+     * @var RegistrationProvidedLoggerFactoryProxy
      */
-    public function __construct(Logger $rootLogger)
+    private $parentProxy;
+
+    public function __construct(
+        RegistrationProvidedLoggerFactory $factory,
+        RegistrationProvidedLoggerFactoryProxy $parentProxy
+    ) {
+        parent::__construct($factory);
+        $this->parentProxy = $parentProxy;
+    }
+
+    /**
+     * @param string $name
+     * @return Logger
+     */
+    public function getLogger($name)
     {
-        parent::__construct(new NotInitializedFactory(new LoggerMap($rootLogger), $this));
+        $this->parentProxy->factory = new InitializedFactory($this->factory);
+        return $this->factory->getLogger($name);
     }
 }

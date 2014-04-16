@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2012 Szurovecz János
+ * Copyright (c) 2012-2014 Szurovecz János
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -23,16 +23,38 @@
 
 namespace lf4php;
 
+use RuntimeException;
+
 /**
+ * @package lf4php
+ *
  * @author Szurovecz János <szjani@szjani.hu>
  */
-class CachedClassLoggerFactory extends RegistrationProvidedLoggerFactoryProxy
+final class InitializedFactory extends RegistrationProvidedLoggerFactoryProxy
 {
     /**
-     * @param Logger $rootLogger
+     * @param string $classOrNamespace
+     * @param Logger $logger
+     * @throws \RuntimeException
      */
-    public function __construct(Logger $rootLogger)
+    public function registerLogger($classOrNamespace, Logger $logger)
     {
-        parent::__construct(new NotInitializedFactory(new LoggerMap($rootLogger), $this));
+        $this->throwException();
+    }
+
+    /**
+     * @param Logger $logger
+     * @throws \RuntimeException
+     */
+    public function setRootLogger(Logger $logger)
+    {
+        $this->throwException();
+    }
+
+    private function throwException()
+    {
+        throw new RuntimeException(
+            "Cannot register any Logger instances after the first call of getLogger() method"
+        );
     }
 }
