@@ -53,9 +53,15 @@ abstract class LocationLogger implements Logger
         } else {
             $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $backtraceLevel + 1);
         }
-        return array_key_exists($backtraceLevel, $trace)
-            ? $trace[$backtraceLevel]['class']
-            : $trace[$backtraceLevel - 1]['file'];
+
+        $traceCount = count($trace);
+        if ($backtraceLevel <= $traceCount) {
+            return !empty($trace[$backtraceLevel]['class'])
+                ? $trace[$backtraceLevel]['class']
+                : $trace[$backtraceLevel -1 ]['file'];
+        } else {
+            return $trace[$traceCount - 1]['file'];
+        }
     }
 
     protected function getShortLocation($backtraceLevel = self::DEFAULT_BACKTRACE_LEVEL)
