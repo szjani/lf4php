@@ -58,7 +58,7 @@ abstract class LocationLogger implements Logger
         if ($backtraceLevel <= $traceCount) {
             return !empty($trace[$backtraceLevel]['class'])
                 ? $trace[$backtraceLevel]['class']
-                : $trace[$backtraceLevel -1 ]['file'];
+                : $trace[$backtraceLevel - 1]['file'];
         } else {
             return $trace[$traceCount - 1]['file'];
         }
