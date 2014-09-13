@@ -16,17 +16,19 @@ Feel free to implement a binding for your preferred logging framework.
 
 ### Autofind implementation
 
-You do not have to set the factory of your chosen framework if and only if only that implementation is available and that
-is known by lf4php. Currently known implementations:
+Logger objects are obtained via static way through `lf4php\impl\StaticLoggerBinder` which must exist in the binding library.
+If the logging framework supports static access to logger objects, the binding should use it to ease lf4php configuration.
+Otherwise you need to register the configured logging objects for lf4php.
+
+Currently known implementations:
 
 * [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
 * [lf4php/lf4php-log4php](https://github.com/szjani/lf4php-log4php)
 * [lf4php/lf4php-psr3](https://github.com/szjani/lf4php-psr3)
-* [lf4php/lf4php-stdout] (https://github.com/szjani/lf4php-stdout) (You should use another implementation instead)
 
 ### NOPLoggerFactory
 
-If you do not set a factory and there are not available any implementations, NOPLoggerFactory will be used by default.
+If `lf4php\impl\StaticLoggerBinder` does not exist which means there is no available binding, `NOPLoggerFactory` will be used by default.
 
 ### CachedClassLoggerFactory
 
@@ -55,8 +57,7 @@ Using lf4php
 
 ```php
 <?php
-// ... configure the logging framework and set factory
-LoggerFactory::setILoggerFactory($factoryImplementation);
+// ... configuring the logging framework through `lf4php\ILoggerFactory` which is provided by `lf4php\impl\StaticLoggerBinder` 
 
 // Most implementations support logging hierarchy. You can use __CLASS__ keyword to obtain a logger.
 $logger = LoggerFactory::getLogger('\foo\bar');
@@ -67,6 +68,15 @@ $logger->error(new \Exception());
 
 History
 -------
+
+### 4.2
+
+ - Mapped (MDC) Diagnostic Contexts support. More information: http://logback.qos.ch/manual/mdc.html
+
+### 4.1
+
+ - Performance increased.
+ - After an `lf4php\Logger` has been obtained for the first time, you cannot register more loggers. 
 
 ### 4.0
 
