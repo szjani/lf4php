@@ -24,64 +24,30 @@
 namespace lf4php;
 
 use lf4php\ILoggerFactory;
-use ReflectionClass;
-use ReflectionException;
-use RuntimeException;
+use lf4php\nop\NOPLoggerFactory;
+use lf4php\impl\StaticLoggerBinder;
 
 /**
  * @author Szurovecz János <szjani@szjani.hu>
  */
 class LoggerFactory
 {
-    public static $KNOWN_BINDINGS = array(
-        'lf4php\monolog\MonologLoggerFactory',
-        'lf4php\stdout\StdoutLoggerFactory',
-        'lf4php\log4php\Log4phpLoggerFactory',
-        'lf4php\psr3\Psr3LoggerFactory'
-    );
-
     /**
      * @var ILoggerFactory
      */
-    private static $iLoggerFactory;
+    protected static $iLoggerFactory;
+
+    public static function init()
+    {
+        if (class_exists('lf4php\impl\StaticLoggerBinder')) {
+            self::$iLoggerFactory = StaticLoggerBinder::$SINGLETON->getLoggerFactory();
+        } else {
+            self::$iLoggerFactory = new NOPLoggerFactory();
+        }
+    }
 
     private function __construct()
     {
-    }
-
-    /**
-     * Try to find a known binding.
-     *
-     * @throws RuntimeException More than one binding has been found
-     */
-    private static function findILoggerFactory()
-    {
-        $class = null;
-        foreach (self::$KNOWN_BINDINGS as $bindingClass) {
-            if (class_exists($bindingClass)) {
-                if ($class !== null) {
-                    throw new RuntimeException('More than one lf4php binding has been found. Set explicit one!');
-                }
-                $class = $bindingClass;
-            }
-        }
-        if ($class === null) {
-            return null;
-        }
-        $reflectionClass = new ReflectionClass($class);
-        try {
-            return $reflectionClass->newInstanceArgs();
-        } catch (ReflectionException $e) {
-            return null;
-        }
-    }
-
-    /**
-     * @param ILoggerFactory $iLoggerFactory
-     */
-    public static function setILoggerFactory(ILoggerFactory $iLoggerFactory = null)
-    {
-        self::$iLoggerFactory = $iLoggerFactory;
     }
 
     /**
@@ -89,12 +55,6 @@ class LoggerFactory
      */
     public static function getILoggerFactory()
     {
-        if (self::$iLoggerFactory === null) {
-            self::$iLoggerFactory = self::findILoggerFactory();
-            if (self::$iLoggerFactory === null) {
-                self::$iLoggerFactory = new nop\NOPLoggerFactory();
-            }
-        }
         return self::$iLoggerFactory;
     }
 
@@ -107,3 +67,4 @@ class LoggerFactory
         return self::getILoggerFactory()->getLogger($name);
     }
 }
+LoggerFactory::init();

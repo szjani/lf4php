@@ -36,18 +36,27 @@ class LoggerFactoryTest extends PHPUnit_Framework_TestCase
         self::assertInstanceOf('\lf4php\nop\NOPLoggerFactory', $factory);
     }
 
-    public function testFindKnownBindings()
-    {
-        LoggerFactory::$KNOWN_BINDINGS[] = 'lf4php\nop\NOPLoggerFactory';
-        $logger = LoggerFactory::getLogger('test');
-        self::assertInstanceOf('lf4php\nop\NOPLogger', $logger);
-    }
-
-    public function testSetILoggerFactory()
+    /**
+     * @test
+     */
+    public function shouldUseFoundILoggerFactory()
     {
         $factory = $this->getMock('\lf4php\ILoggerFactory');
-        LoggerFactory::setILoggerFactory($factory);
-        self::assertSame($factory, LoggerFactory::getILoggerFactory());
-        LoggerFactory::setILoggerFactory(null);
+        $loggerName = 'logger-name';
+        LoggerFactoryChild::setILoggerFactory($factory);
+        $factory
+            ->expects(self::once())
+            ->method('getLogger')
+            ->with($loggerName);
+        LoggerFactory::getLogger($loggerName);
+        LoggerFactory::init();
+    }
+}
+
+class LoggerFactoryChild extends LoggerFactory
+{
+    public static function setILoggerFactory(ILoggerFactory $loggerFactory)
+    {
+        static::$iLoggerFactory = $loggerFactory;
     }
 }
