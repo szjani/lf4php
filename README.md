@@ -10,7 +10,7 @@ This is a logging facade library. It wraps and hides logging frameworks thus you
 Features
 --------
 
-There is one implementation shipped with this package, the NOPLoggerFactory. It doesn't do anything.
+There is one implementation available in this package, the `NOPLoggerFactory`. It doesn't do anything. You need to use an lf4php binder as well.
 
 Feel free to implement a binding for your preferred logging framework.
 
@@ -72,6 +72,8 @@ History
 ### 4.2
 
  - Mapped (MDC) Diagnostic Contexts support. More information: http://logback.qos.ch/manual/mdc.html
+ - There is a BC break around configuration. `LoggerFactory::setILoggerFactory()` has been removed, only one
+  `lf4php\impl\StaticLoggerBinder` should be available provided by the binder.
 
 ### 4.1
 
