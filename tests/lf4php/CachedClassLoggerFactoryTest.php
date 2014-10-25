@@ -74,6 +74,16 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
+     */
+    public function shouldOmitTrailingBackslashes()
+    {
+        $logger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $this->factory->registerLogger('\foo', $logger);
+        self::assertSame($logger, $this->factory->getLogger('foo\another'));
+    }
+
+    /**
      * @expectedException \RuntimeException
      */
     public function testLaterRegisteredLogger()

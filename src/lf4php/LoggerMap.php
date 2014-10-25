@@ -27,6 +27,8 @@ use LazyMap\AbstractLazyMap;
 
 class LoggerMap extends AbstractLazyMap implements RegistrationProvidedLoggerFactory
 {
+    const SEPARATOR = '\\';
+
     /**
      * @var Logger
      */
@@ -69,7 +71,7 @@ class LoggerMap extends AbstractLazyMap implements RegistrationProvidedLoggerFac
      */
     public function registerLogger($classOrNamespace, Logger $logger)
     {
-        $key = (string) $classOrNamespace;
+        $key = $this->trim((string) $classOrNamespace);
         $this->$key = $logger;
     }
 
@@ -82,14 +84,18 @@ class LoggerMap extends AbstractLazyMap implements RegistrationProvidedLoggerFac
      */
     protected function instantiate($name)
     {
-        $name = trim($name, '\\');
-        $parts = explode('\\', $name);
+        $parts = explode(self::SEPARATOR, $this->trim($name));
         array_pop($parts);
         if (empty($parts)) {
             return $this->rootLogger;
         } else {
-            $parentName = implode('\\', $parts);
+            $parentName = implode(self::SEPARATOR, $parts);
             return $this->$parentName;
         }
+    }
+
+    private function trim($name)
+    {
+        return trim($name, self::SEPARATOR);
     }
 }
