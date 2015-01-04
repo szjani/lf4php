@@ -50,11 +50,11 @@ class MDCTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldReturnNOPMDCAdapter()
+    public function shouldReturnBasicMDCAdapter()
     {
         MDCChild::reset();
         MDC::init();
-        self::assertInstanceOf('\lf4php\helpers\NOPMDCAdapter', MDC::getMDCAdapter());
+        self::assertInstanceOf('\lf4php\helpers\BasicMDCAdapter', MDC::getMDCAdapter());
     }
 
     /**

@@ -24,7 +24,7 @@
 namespace lf4php;
 
 use InvalidArgumentException;
-use lf4php\helpers\NOPMDCAdapter;
+use lf4php\helpers\BasicMDCAdapter;
 use lf4php\impl\StaticMDCBinder;
 use lf4php\spi\MDCAdapter;
 
@@ -47,7 +47,7 @@ class MDC
         if (class_exists('lf4php\impl\StaticMDCBinder')) {
             self::$mdcAdapter = StaticMDCBinder::$SINGLETON->getMDCA();
         } else {
-            self::$mdcAdapter = new NOPMDCAdapter();
+            self::$mdcAdapter = new BasicMDCAdapter();
         }
     }
 
