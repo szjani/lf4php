@@ -51,9 +51,9 @@ If a class extends `precore\lang\Object`, you can obtain the proper logger objec
 Bindings
 --------
 
-* lf4php-log4php
-* lf4php-monolog
-* lf4php-psr3
+* [lf4php/lf4php-log4php](https://github.com/szjani/lf4php-log4php)
+* [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
+* [lf4php/lf4php-psr3](https://github.com/szjani/lf4php-psr3)
 
 lf4php-psr3 is a generic binding for any PSR-3 logging framework. However using specific bindings is recommended, because some features are missing from PSR-3 API.
 
