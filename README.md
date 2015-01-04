@@ -116,6 +116,19 @@ class BarClass
 
 The above info log call will use the `$barLogger` object.
 
+Location information
+--------------------
+
+It is really hard to identify the source of a log entry if it does not contain any information about it. Some frameworks like log4php
+supports this feature, and can add the class or the file name to the messages, but Monolog and PSR-3 does not offer it. lf4php automatically prefixes
+the messages with the location information all the time.
+
+The output of the previous example would something like this:
+
+```
+[2015-01-04 13:18:43] foo\bar.INFO: f\b\BarClass - hello [] []
+```
+
 History
 -------
 
