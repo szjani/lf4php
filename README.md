@@ -5,66 +5,116 @@ master: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=master)]
 3.0: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=3.0)](https://travis-ci.org/szjani/lf4php)
 4.0: [![Build Status](https://travis-ci.org/szjani/lf4php.png?branch=4.0)](https://travis-ci.org/szjani/lf4php)
 
-This is a logging facade library. It wraps and hides logging frameworks thus you can whenever switch to another one. The idea came from slf4j which is a Java solution.
+The Logging Facade for PHP (lf4php) serves as a simple facade or abstraction for various logging frameworks. Its design comes from [slf4j](http://www.slf4j.org).
 
-Features
+Hello World
+-----------
+
+```php
+$logger = LoggerFactory::getLogger(HelloWorld::class);
+// or $logger = LoggerFactory::getLogger("The\Namespace\Of\HelloWorld");
+$logger->info("Hello World");
+```
+
+This code snippet does not do anything. To resolve the problem, you have to use a logging framework and the appropriate lf4php binding. Assuming you use Monolog and Composer,
+you need to pull the following dependencies:
+
+* lf4php/lf4php
+* lf4php/lf4php-monolog
+
+Typical usage pattern
+---------------------
+
+```php
+class Wombat
+{
+    private $t;
+    private $oldT;
+
+    public function setTemperature($temperature)
+    {
+        $logger = LoggerFactory::getLogger(Wombat::class);
+        $this->oldT = $this->t;
+        $this->t = $temperature;
+
+        $logger->debug("Temperature set to {}. Old temperature was {}.", [$this->t, $this->oldT]);
+
+        if ($temperature > 50) {
+            $logger->info("Temperature has risen above 50 degrees.");
+        }
+    }
+}
+```
+
+If a class extends `precore\lang\Object`, you can obtain the proper logger object via `self::getLogger()` method call.
+
+Bindings
 --------
 
-There is one implementation available in this package, the `NOPLoggerFactory`. It doesn't do anything. You need to use an lf4php binder as well.
+* lf4php-log4php
+* lf4php-monolog
+* lf4php-psr3
 
-Feel free to implement a binding for your preferred logging framework.
+lf4php-psr3 is a generic binding for any PSR-3 logging framework. However using specific bindings is recommended, because some features are missing from PSR-3 API.
 
-### Autofind implementation
+Mapped Diagnostic Context (MDC) support
+---------------------------------------
 
-Logger objects are obtained via static way through `lf4php\impl\StaticLoggerBinder` which must exist in the binding library.
-If the logging framework supports static access to logger objects, the binding should use it to ease lf4php configuration.
-Otherwise you need to register the configured logging objects for lf4php.
+"Mapped Diagnostic Context" is essentially a map maintained by the logging framework where the application code provides key-value pairs which can then be inserted by the logging framework in log messages. MDC data can also be highly helpful in filtering messages or triggering certain actions.
 
-Currently known implementations:
+lf4php supports MDC, or mapped diagnostic context. If the underlying logging framework offers MDC functionality, then lf4php will delegate to the underlying framework's MDC. Note that at this time, only log4php offers MDC functionality (and Monolog binding use a processor for it). If the underlying framework does not offer MDC, for example PSR-3, then lf4php will still store MDC data but the information therein will need to be retrieved by custom user code.
 
-* [lf4php/lf4php-monolog](https://github.com/szjani/lf4php-monolog)
-* [lf4php/lf4php-log4php](https://github.com/szjani/lf4php-log4php)
-* [lf4php/lf4php-psr3](https://github.com/szjani/lf4php-psr3)
-
-### NOPLoggerFactory
-
-If `lf4php\impl\StaticLoggerBinder` does not exist which means there is no available binding, `NOPLoggerFactory` will be used by default.
-
-### CachedClassLoggerFactory
-
-It is recommended to extend this class when you create your own implementation. It provides two main features:
-* It caches Logger objects by theirs name, so you will get the same Logger object with the same name.
-* It supports Logger hierarchy which means you can use class names as logger names and it tries to find the closest logger
-based on the exploded name.
-
-  For instance, you configure a logger for a library named [mf4php] (http://github.com/szjani/mf4php). All classes coming from
-  mf4php\\* namespace use Logger objects which names start with mf4php. In this case your configured logger will be used.
-
-  It is highly recommended to use \__CLASS\__ keyword anytime you want to obtain a logger object.
-
-### Message formatting
-
-You can use parametrized messages. The '{}' pairs will be replaced with the corresponding item in the passed array.
-The following two lines will yield the exact same output:
+For example you can store user specific information in MDC. After that, log messages may contain these values depending on the configuration:
 
 ```php
-$logger->debug('Hello ' . $name . ', welcome to ' . $where . '!');
-$logger->debug('Hello {}, welcome to {}!', array($name, $where));
+// before the controller
+MDC::put("userName", Session::getCurrentUser()->name());
+
+// later, in the controller
+$logger = LoggerFactory::getLogger(BasketController::class);
+$logger->debug("Product added to basket: {}", [$basket]);
 ```
 
-Using lf4php
-------------
+The log entry created in the controller may contains the user name too as additional information.
+
+Static access to logger object
+------------------------------
+
+PSR-3 is a simple API, which does not support static access, you have to inject the logger objects. lf4php supports both static and injection ways.
+The logger objects implement `lf4php\Logger` interface, they are actually instances of the adapter for the logging framework you use.
+
+Logging hierarchy
+-----------------
+
+lf4php supports logging hierarchy even if the logging framework does not provide this feature. It means that when you are accessing to a logger object by a name,
+lf4php assumes that the given string is a class or namespace and splits it at backslashes. After that it removes the last part of it until it finds a logger object
+with the remaining, truncated name.
+
+It is useful when you want to use a different logging configuration for a specific namespace or class. Assuming you use Monolog:
 
 ```php
-<?php
-// ... configuring the logging framework through `lf4php\ILoggerFactory` which is provided by `lf4php\impl\StaticLoggerBinder` 
+// configuring Monolog loggers
+$fooLogger = new \Monolog\Logger('foo');
+$barLogger = new \Monolog\Logger('foo\bar');
 
-// Most implementations support logging hierarchy. You can use __CLASS__ keyword to obtain a logger.
-$logger = LoggerFactory::getLogger('\foo\bar');
-$logger->info('Message');
-$logger->debug('Hello {}, are you {}?', array('John', 'ok'));
-$logger->error(new \Exception());
+$loggerFactory = StaticLoggerBinder::$SINGLETON->getLoggerFactory();
+$loggerFactory->setRootMonologLogger($fooLogger);
+$loggerFactory->registerMonologLogger($barLogger);
 ```
+
+```php
+namespace foo\bar;
+
+class BarClass
+{
+    public function sayHello()
+    {
+        LoggerFactory::getLogger(BarClass::class)->info("hello");
+    }
+}
+```
+
+The above info log call will use the `$barLogger` object.
 
 History
 -------
