@@ -1,25 +1,5 @@
 <?php
-/*
- * Copyright (c) 2012 Janos Szurovecz
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+declare(strict_types=1);
 
 namespace lf4php;
 
@@ -43,7 +23,7 @@ abstract class LocationLogger implements Logger
      *
      * @param int $backtraceLevel
      */
-    protected function getLocation($backtraceLevel = self::DEFAULT_BACKTRACE_LEVEL)
+    protected function getLocation(int $backtraceLevel = self::DEFAULT_BACKTRACE_LEVEL) : string
     {
         $trace = null;
         if (version_compare(PHP_VERSION, '5.3.6', '<')) {
@@ -64,7 +44,7 @@ abstract class LocationLogger implements Logger
         }
     }
 
-    protected function getShortLocation($backtraceLevel = self::DEFAULT_BACKTRACE_LEVEL)
+    protected function getShortLocation(int $backtraceLevel = self::DEFAULT_BACKTRACE_LEVEL) : string
     {
         $parts = explode('\\', $this->getLocation($backtraceLevel + 1));
         $count = count($parts);
@@ -76,23 +56,23 @@ abstract class LocationLogger implements Logger
         return implode('\\', $res);
     }
 
-    public function getLocationPrefix()
+    public function getLocationPrefix() : string
     {
         return $this->locationPrefix;
     }
 
-    public function setLocationPrefix($prefix)
+    public function setLocationPrefix(string $prefix) : void
     {
-        $this->locationPrefix = (string) $prefix;
+        $this->locationPrefix = $prefix;
     }
 
-    public function getLocationSuffix()
+    public function getLocationSuffix() : string
     {
         return $this->locationSuffix;
     }
 
-    public function setLocationSuffix($suffix)
+    public function setLocationSuffix(string $suffix) : void
     {
-        $this->locationSuffix = (string) $suffix;
+        $this->locationSuffix = $suffix;
     }
 }
