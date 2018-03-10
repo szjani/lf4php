@@ -1,34 +1,14 @@
 <?php
-/*
- * Copyright (c) 2012 Janos Szurovecz
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+declare(strict_types=1);
 
 namespace lf4php;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Janos Szurovecz <szjani@szjani.hu>
  */
-class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
+class CachedClassLoggerFactoryTest extends TestCase
 {
     /**
      * @var CachedClassLoggerFactory
@@ -39,7 +19,7 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->defaultLogger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $this->defaultLogger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory = new CachedClassLoggerFactory($this->defaultLogger);
     }
 
@@ -50,22 +30,22 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
 
     public function testGetRegisteredLogger()
     {
-        $logger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $logger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory->registerLogger(__NAMESPACE__, $logger);
         self::assertSame($logger, $this->factory->getLogger(__NAMESPACE__));
     }
 
     public function testGetParentLogger()
     {
-        $logger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $logger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory->registerLogger(__NAMESPACE__, $logger);
         self::assertSame($logger, $this->factory->getLogger(__CLASS__));
     }
 
     public function testGetFirstParentLogger()
     {
-        $logger1 = $this->getMock(__NAMESPACE__ . '\Logger');
-        $logger2 = $this->getMock(__NAMESPACE__ . '\Logger');
+        $logger1 = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
+        $logger2 = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory->registerLogger('foo', $logger1);
         $this->factory->registerLogger('foo\bar', $logger2);
         self::assertSame($logger2, $this->factory->getLogger('foo\bar\test'));
@@ -78,7 +58,7 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function shouldOmitTrailingBackslashes()
     {
-        $logger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $logger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory->registerLogger('\foo', $logger);
         self::assertSame($logger, $this->factory->getLogger('foo\another'));
     }
@@ -88,7 +68,7 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testLaterRegisteredLogger()
     {
-        $fooLogger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $fooLogger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory->getLogger('foo\bar');
         $this->factory->registerLogger('foo', $fooLogger);
     }
@@ -98,14 +78,14 @@ class CachedClassLoggerFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function testLaterSetRootLogger()
     {
-        $fooLogger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $fooLogger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         $this->factory->getLogger('foo\bar');
         $this->factory->setRootLogger($fooLogger);
     }
 
     public function testRootLogger()
     {
-        $logger = $this->getMock(__NAMESPACE__ . '\Logger');
+        $logger = $this->getMockBuilder(__NAMESPACE__ . '\Logger')->getMock();
         self::assertNotSame($logger, $this->factory->getRootLogger());
         $this->factory->setRootLogger($logger);
         self::assertSame($logger, $this->factory->getRootLogger());

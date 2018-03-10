@@ -12,7 +12,6 @@ Hello World
 
 ```php
 $logger = LoggerFactory::getLogger(HelloWorld::class);
-// or $logger = LoggerFactory::getLogger("The\Namespace\Of\HelloWorld");
 $logger->info("Hello World");
 ```
 
@@ -46,7 +45,7 @@ class Wombat
 }
 ```
 
-If a class extends `precore\lang\Object`, you can obtain the proper logger object via `self::getLogger()` method call.
+If a class extends `precore\lang\BaseObject`, you can obtain the proper logger object via `self::getLogger()` method call.
 
 Bindings
 --------

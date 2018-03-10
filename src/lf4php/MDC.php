@@ -1,25 +1,5 @@
 <?php
-/*
- * Copyright (c) 2014 Janos Szurovecz
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do
- * so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+declare(strict_types=1);
 
 namespace lf4php;
 
@@ -42,7 +22,7 @@ class MDC
      */
     protected static $mdcAdapter;
 
-    public static function init()
+    public static function init() : void
     {
         if (class_exists('lf4php\impl\StaticMDCBinder')) {
             self::$mdcAdapter = StaticMDCBinder::$SINGLETON->getMDCA();
@@ -55,7 +35,7 @@ class MDC
      * @param string $key
      * @param string $value
      */
-    public static function put($key, $value)
+    public static function put(string $key, string $value) : void
     {
         self::checkKey($key);
         self::checkMdcAdapter();
@@ -66,7 +46,7 @@ class MDC
      * @param string $key
      * @return string
      */
-    public static function get($key)
+    public static function get(string $key) : string
     {
         self::checkKey($key);
         self::checkMdcAdapter();
@@ -76,14 +56,14 @@ class MDC
     /**
      * @param string $key
      */
-    public static function remove($key)
+    public static function remove(string $key) : void
     {
         self::checkKey($key);
         self::checkMdcAdapter();
         self::$mdcAdapter->remove($key);
     }
 
-    public static function clear()
+    public static function clear() : void
     {
         self::checkMdcAdapter();
         self::$mdcAdapter->clear();
@@ -92,7 +72,7 @@ class MDC
     /**
      * @return array|null
      */
-    public static function getCopyOfContextMap()
+    public static function getCopyOfContextMap() : ?array
     {
         self::checkMdcAdapter();
         return self::$mdcAdapter->getCopyOfContextMap();
@@ -101,7 +81,7 @@ class MDC
     /**
      * @param array $contextMap
      */
-    public static function setContextMap(array $contextMap)
+    public static function setContextMap(array $contextMap) : void
     {
         self::checkMdcAdapter();
         self::$mdcAdapter->setContextMap($contextMap);
@@ -110,19 +90,19 @@ class MDC
     /**
      * @return MDCAdapter
      */
-    public static function getMDCAdapter()
+    public static function getMDCAdapter() : MDCAdapter
     {
         return self::$mdcAdapter;
     }
 
-    private static function checkMdcAdapter()
+    private static function checkMdcAdapter() : void
     {
         if (self::$mdcAdapter === null) {
             throw new \RuntimeException('lf4php MDC adapter is null');
         }
     }
 
-    private static function checkKey($key)
+    private static function checkKey(string $key) : void
     {
         if ($key === null) {
             throw new InvalidArgumentException('The $key cannot be null');
