@@ -46,7 +46,7 @@ class MDC
      * @param string $key
      * @return string
      */
-    public static function get(string $key) : string
+    public static function get(string $key) : ?string
     {
         self::checkKey($key);
         self::checkMdcAdapter();
